@@ -1,0 +1,17 @@
+// ==UserScript==
+// @name         BetterTossInvest
+// @name:ko      BetterTossInvest
+// @namespace    better-toss-invest
+// @version      1.6.4
+// @homepageURL  https://github.com/DegreeCode/BetterTossInvest
+// @supportURL   https://github.com/DegreeCode/BetterTossInvest/issues
+// @updateURL    https://github.com/DegreeCode/BetterTossInvest/releases/latest/download/BetterTossInvest.meta.js
+// @downloadURL  https://github.com/DegreeCode/BetterTossInvest/releases/latest/download/BetterTossInvest.user.js
+// @description  매수·매도 호가선, 국내주식 중간호가, 할로우 캔들 복원, 지수 차트 조작, 자체 초봉·틱봉, 화면 갱신 간격 설정 기능을 추가합니다.
+// @match        https://www.tossinvest.com/*
+// @match        https://tossinvest.com/*
+// @run-at       document-start
+// @sandbox      raw
+// @grant        none
+// @noframes
+// ==/UserScript==
