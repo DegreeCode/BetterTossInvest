@@ -19,6 +19,7 @@ function installLocalCharts(moduleState) {
     lastError: null,
   });
   runtime.localCharts = state;
+  const patchWidgetTime = createTickChartTimeCompatibility(resolutions, state);
   Object.defineProperty(window, "__TOSS_LOCAL_SECONDS__", {
     configurable: true,
     enumerable: false,
@@ -78,6 +79,7 @@ function installLocalCharts(moduleState) {
       };
     },
     onCreated(widget) {
+      patchWidgetTime(widget);
       if (ticksEnabled) {
         for (const reference of chartWidgets) {
           const previous = reference.deref();

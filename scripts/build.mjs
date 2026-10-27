@@ -23,6 +23,7 @@ const sources = [
   "local-charts/legacy-ticks.js",
   "local-charts/resolution-controls.js",
   "local-charts/datafeed.js",
+  "local-charts/chart-time.js",
   "local-charts/index.js",
   "features/mid-quote.js",
   "features/bid-ask.js",

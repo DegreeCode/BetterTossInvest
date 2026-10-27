@@ -2,7 +2,7 @@
 // @name         BetterTossInvest
 // @name:ko      BetterTossInvest
 // @namespace    better-toss-invest
-// @version      1.6.4
+// @version      1.6.5
 // @homepageURL  https://github.com/DegreeCode/BetterTossInvest
 // @supportURL   https://github.com/DegreeCode/BetterTossInvest/issues
 // @updateURL    https://github.com/DegreeCode/BetterTossInvest/releases/latest/download/BetterTossInvest.meta.js
