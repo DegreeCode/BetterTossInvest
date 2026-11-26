@@ -129,12 +129,18 @@ function createChartHub() {
       started = true;
       runtime.webpackHub.transformFactories((factory, moduleId) => rewriteFactory(factory, moduleId, (source) => {
         if (!source.includes("datafeed") || !source.includes("disabled_features")) return null;
-        // v32의 ES 모듈은 widget을 HL 같은 이름으로 내보낸다.
-        // 이름이 바뀐 생성자는 datafeed/library_path 옵션으로 식별한다.
+        // v32는 이름이 바뀐 생성자의 datafeed와 library_path 사이에
+        // 중첩된 timeframe 및 time_scale 옵션을 펼쳐 넣는다.
         return source.replace(
-          /new\s+([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\s*\(\s*\{(?=[^{}]*\bdatafeed\s*:)(?=[^{}]*\blibrary_path\s*:)|new\s+([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*\.widget)\s*\(\s*\{/g,
-          (_match, constructor, legacyConstructor) =>
-            `new (window.__TOSS_INTEGRATED__.chartHub.wrapWidget(${constructor ?? legacyConstructor}))({`,
+          /new\s+([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\s*\(\s*\{/g,
+          (match, constructor, offset) => {
+            if (!constructor.endsWith(".widget")) {
+              const options = source.slice(offset + match.length);
+              if (!/^[^{}]*\bdatafeed\s*:/.test(options) ||
+                  !/^(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*?\blibrary_path\s*:/.test(options)) return match;
+            }
+            return `new (window.__TOSS_INTEGRATED__.chartHub.wrapWidget(${constructor}))({`;
+          },
         );
       }, state, "차트"));
       try {

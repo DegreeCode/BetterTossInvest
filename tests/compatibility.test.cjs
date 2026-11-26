@@ -88,9 +88,31 @@ for (const [name, expression] of [
   });
 }
 
+test('v32 widget with conditional spreads connects both local chart resolutions', () => {
+  const h = boot({ enableSec: true, enableTick: true });
+  h.context.feed = { onReady(callback) { callback({ supported_resolutions: ['1D'] }); } };
+  const widget = widgetFactory(h, `new tv.HL({
+    container:"chart", datafeed:window.feed, symbol:"A005930", interval:"1D",
+    ...null==window.timeframe?{}:{timeframe:window.timeframe},
+    ...null==window.minBarSpacing?{}:{time_scale:{min_bar_spacing:window.minBarSpacing}},
+    library_path:"/library/", disabled_features:["seconds_resolution","tick_resolution"]
+  })`);
+  assert.equal(h.runtime.localCharts.widgetsCaptured, 1);
+  for (const feature of ['seconds_resolution', 'tick_resolution']) {
+    assert.ok(widget.options.enabled_features.includes(feature));
+    assert.ok(!widget.options.disabled_features.includes(feature));
+  }
+  widget.options.datafeed.onReady(({ supported_resolutions }) => {
+    assert.ok(supported_resolutions.includes('5S'));
+    assert.ok(supported_resolutions.includes('10T'));
+    assert.ok(supported_resolutions.includes('1D'));
+  });
+});
+
 test('renamed constructors without chart options are preserved', () => {
   const h = boot({ indexChartUnlock: true }, '/indices/KOSPI');
   widgetFactory(h, 'new tv.HL({container:"other",disabled_features:[],note:"datafeed"})');
+  widgetFactory(h, 'new tv.HL({datafeed:window.feed,disabled_features:[],custom:{library_path:"/library/"}})');
   assert.equal(h.runtime.modules.indexChartUnlock.widgetOptionsPatched, 0);
 });
 
